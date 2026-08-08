@@ -53,8 +53,6 @@ react-agent-demo/
 
 2. Install dependencies:
    ```bash
-   pip install -r requirements.txt
-   # OR if using a package manager as per pyproject.toml
    pip install .
    ```
 
@@ -71,13 +69,35 @@ APP_PORT=8010
 
 ### Running the Application
 
-Start the server using the module path:
+To use the AI agent, you should run both the backend and the frontend.
+
+#### 1. Start the Backend Server
+Run the server using the module path:
 
 ```bash
 python -m app.main
 ```
 
-The server will be available at `http://localhost:8010`.
+The server will be available at `http://localhost:8011`.
+
+#### 2. Start the Streamlit Frontend
+In a new terminal window, run the following command:
+
+```bash
+streamlit run streamlit_app.py
+```
+
+The frontend interface will be available at `http://localhost:8501` (default Streamlit port).
+
+## 🎨 Frontend Interface
+
+The project includes a Streamlit-based chat interface that provides a user-friendly way to interact with the agent without making direct API calls.
+
+**Key Features:**
+- Real-time conversational UI.
+- Persistent chat history during the session.
+- Direct integration with the FastAPI backend.
+
 
 ## 🔌 API Reference
 
