@@ -15,6 +15,11 @@ def my_tool(query: str) -> str:
     A simple tool that takes a query and returns a response."""
     return f"Tool response for query: {query}"
 
+@tool
+def multiply(a: int, b: int) -> int:
+    """Multiply two numbers."""
+    return a * b
+
 # Create the agent once for reuse
 agent = create_agent(llm, tools=[my_tool])
 
@@ -43,6 +48,7 @@ class ChatResponse(BaseModel):
 async def chat(request: ChatRequest):
     response = agent.invoke({"messages": [{"role": "user", "content": request.message}]})
     last_message = response["messages"][-1]
+    print(last_message)
     return {"response": last_message.content}
 
 def main():
