@@ -12,13 +12,18 @@ def my_tool(query: str) -> str:
 
 def run():
     agent = create_agent(llm, tools=[my_tool])
-    response = agent.invoke({"messages": [{"role": "user", "content": "Hello, how are you?"}]})
-    print(response)
+    print("Chat bot started. Type 'exit' or 'quit' to stop.")
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() in ["exit", "quit"]:
+            break
+        response = agent.invoke({"messages": [{"role": "user", "content": user_input}]})
+        last_message = response["messages"][-1]
+        print(f"AI: {last_message.content}")
     
 def main():
     print("Hello from react-agent-demo!")
     run()
-
 
 if __name__ == "__main__":
     main()
