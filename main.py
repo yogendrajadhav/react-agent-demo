@@ -3,7 +3,7 @@ from langchain.tools import tool
 from langchain.agents import create_agent
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import uvicorn
 
 # Configuration
@@ -18,7 +18,11 @@ def my_tool(query: str) -> str:
 # Create the agent once for reuse
 agent = create_agent(llm, tools=[my_tool])
 
-app = FastAPI()
+app = FastAPI(
+    title="React Agent API",
+    description="A simple API to interact with a LangChain agent powered by Ollama.",
+    version="1.0.0"
+)
 
 # Enable CORS for frontend consumption
 app.add_middleware(
@@ -30,17 +34,20 @@ app.add_middleware(
 )
 
 class ChatRequest(BaseModel):
-    message: str
+    message: str = Field(..., example="Hello, how are you?")
 
-@app.post("/chat")
+class ChatResponse(BaseModel):
+    response: str = Field(..., example="I am doing well, thank you!")
+
+@app.post("/chat", response_model=ChatResponse, summary="Chat with AI Agent", description="Send a message to the AI agent and receive a response. The agent can use tools to answer your query.")
 async def chat(request: ChatRequest):
     response = agent.invoke({"messages": [{"role": "user", "content": request.message}]})
     last_message = response["messages"][-1]
     return {"response": last_message.content}
 
 def main():
-    print("Starting API server on http://localhost:8080")
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    print("Starting API server on http://localhost:8010")
+    uvicorn.run(app, host="0.0.0.0", port=8010)
 
 if __name__ == "__main__":
     main()
